@@ -1,0 +1,16 @@
+MVP/static/user_data
+
+# Environment variables
+.env
+
+/%logstart
+
+# Python cache files
+*.pyc
+__pycache__/
+.pytest_cache/
+
+# Virtual Environment
+venv/
+venv/*
+/venv
