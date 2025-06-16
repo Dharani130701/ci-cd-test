@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                 git branch: 'main', credentialsId: 'new', url: 'https://github.com/Dharani130701/ci-cd-test.git'
+                git branch: 'main', credentialsId: 'new', url: 'https://github.com/Gunashekar199725/Gyst.git'
             }
         }
 
