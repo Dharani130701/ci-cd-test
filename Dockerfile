@@ -1,45 +1,24 @@
-pipeline {
-    agent any
+FROM python:3.11
 
-    environment {
-        IMAGE_NAME = 'my-python-wsgi-app'
-        APP_CONTAINER = 'python-wsgi-container'
-        APP_PORT = '5000'
-    }
+# Set working directory
+WORKDIR /app
 
-    stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', credentialsId: 'new', url: 'https://github.com/Dharani130701/ci-cd-test.git'
-            }
-        }
+# Install system dependencies
+RUN apt-get update && apt-get install -y build-essential && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-        stage('Build Docker Image') {
-            steps {
-                sh '''
-                    #!/bin/bash
-                    docker build -t ${IMAGE_NAME} .
-                '''
-            }
-        }
+# Copy requirements first for caching
+COPY requirements.txt .
 
-        stage('Run App Container') {
-            steps {
-                sh '''
-                    #!/bin/bash
-                    docker rm -f ${APP_CONTAINER} 2>/dev/null || echo "Container not found"
-                    docker run -d -p ${APP_PORT}:${APP_PORT} --name ${APP_CONTAINER} ${IMAGE_NAME}
-                '''
-            }
-        }
-    }
+# Upgrade pip and install Python dependencies
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt
 
-    post {
-        success {
-            echo "✅ App container deployed successfully."
-        }
-        failure {
-            echo "❌ Pipeline failed. Please check the logs."
-        }
-    }
-}
+# Copy the full app code
+COPY . .
+
+# Expose port
+EXPOSE 5000
+
+# Set default command (assuming your wsgi.py starts the app when run with `python wsgi.py`)
+CMD ["python", "wsgi.py"]
