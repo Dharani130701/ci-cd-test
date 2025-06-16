@@ -13,6 +13,6 @@ if __name__ == "__main__":
     application.run(
         debug=os.getenv('FLASK_DEBUG', True),
         host=os.getenv('FLASK_RUN_HOST', '0.0.0.0'),
-        port=int(os.getenv('FLASK_RUN_PORT', 1234))
+        port=int(os.getenv('FLASK_RUN_PORT', 5000))
     )
 
